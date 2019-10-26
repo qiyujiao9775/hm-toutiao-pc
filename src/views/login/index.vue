@@ -4,11 +4,11 @@
     <el-card>
       <!-- logo -->
       <img src="../../assets/logo.png" width="50px" height="50px" alt />
-      <el-form :model="loginForm">
-        <el-form-item>
+      <el-form :model="loginForm" :rules="loginRules" ref="loginForm" status-icon>
+        <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="code">
           <el-input
             v-model="loginForm.code"
             placeholder="请输入验证码"
@@ -20,7 +20,7 @@
           <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button style="width:100%;">登录</el-button>
+          <el-button style="width:100%;" @click="login">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -30,12 +30,50 @@
 <script>
 export default {
   data () {
+    const checkMobile = (rule, value, callback) => {
+      if (/^1[3-9]\d{9}$/.test(value)) {
+        callback()
+      } else {
+        callback(new Error('手机号格式不对'))
+      }
+    }
+
     return {
       loginForm: {
         mobile: '',
         code: ''
+      },
+      loginRules: {
+        mobile: [
+          { required: true, message: '请输入电话', trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
+        ]
       }
     }
+  },
+  methods: {
+    login () {
+      // 获取表单组件实例 ---> 调用校验函数
+
+      // 发请求 校验手机号和验证码  后台
+      this.$refs['loginForm'].validate((valid) => {
+        if (valid) {
+          // 发请求 校验手机号和验证码  后台
+          this.$http.post('authorizations', this.loginForm).then(res => {
+            // 成功
+            this.$router.push('/')
+          }).catch(() => {
+            // 失败 提示
+            this.$message.error('手机号或验证码错误')
+          })
+        }
+      })
+    }
+
   }
 }
 </script>
