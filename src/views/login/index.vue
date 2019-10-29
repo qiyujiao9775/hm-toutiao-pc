@@ -62,33 +62,32 @@ export default {
 
       // 发请求 校验手机号和验证码  后台
       this.$refs['loginForm'].validate(async valid => {
-        if (valid) {
-          // 发请求 校验手机号和验证码  后台
-          this.$http
-            .post('authorizations', this.loginForm)
-            .then(res => {
-              // 成功
-              this.$router.push('/')
-              // 保存用户信息(token) 把 存储用户信息的操作封装
-              local.setUser(res.data.data)
-            })
-            .catch(() => {
-              // 失败 提示
-              this.$message.error('手机号或验证码错误')
-            })
-        }
         // if (valid) {
-        //   // 当一段代码不能保证一定没有报错  try {} catch (e) {} 捕获异常处理异常
-        //   try {
-        //     const {
-        //       data: { data }
-        //     } = await this.$http.post('authorizations', this.loginForm)
-        //     local.setUser(data)
-        //     this.$router.push('/')
-        //   } catch (e) {
-        //     this.$message.error('手机号或验证码错误')
-        //   }
+        //   // 发请求 校验手机号和验证码  后台
+        //   this.$http
+        //     .post('authorizations', this.loginForm)
+        //     .then(res => {
+        //       // 成功
+        //       this.$router.push('/')
+        //       // 保存用户信息(token) 把 存储用户信息的操作封装
+        //       local.setUser(res.data.data)
+        //     })
+        //     .catch(() => {
+        //       // 失败 提示
+        //       this.$message.error('手机号或验证码错误')
+        //     })
         // }
+        if (valid) {
+          // 当一段代码不能保证一定没有报错
+          //  try {} catch (e) {}     exeption()意外捕获异常处理异常
+          try { // 成功
+            const { data: { data } } = await this.$http.post('authorizations', this.loginForm)
+            local.setUser(data)
+            this.$router.push('/')
+          } catch (e) {
+            this.$message.error('手机号或验证码错误')
+          }
+        }
       })
     }
   }
