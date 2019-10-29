@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import local from '@/utils/store.js'
 export default {
   data () {
     const checkMobile = (rule, value, callback) => {
@@ -40,8 +41,8 @@ export default {
 
     return {
       loginForm: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111',
+        code: '246810'
       },
       loginRules: {
         mobile: [
@@ -60,20 +61,36 @@ export default {
       // 获取表单组件实例 ---> 调用校验函数
 
       // 发请求 校验手机号和验证码  后台
-      this.$refs['loginForm'].validate((valid) => {
+      this.$refs['loginForm'].validate(async valid => {
         if (valid) {
           // 发请求 校验手机号和验证码  后台
-          this.$http.post('authorizations', this.loginForm).then(res => {
-            // 成功
-            this.$router.push('/')
-          }).catch(() => {
-            // 失败 提示
-            this.$message.error('手机号或验证码错误')
-          })
+          this.$http
+            .post('authorizations', this.loginForm)
+            .then(res => {
+              // 成功
+              this.$router.push('/')
+              // 保存用户信息(token) 把 存储用户信息的操作封装
+              local.setUser(res.data.data)
+            })
+            .catch(() => {
+              // 失败 提示
+              this.$message.error('手机号或验证码错误')
+            })
         }
+        // if (valid) {
+        //   // 当一段代码不能保证一定没有报错  try {} catch (e) {} 捕获异常处理异常
+        //   try {
+        //     const {
+        //       data: { data }
+        //     } = await this.$http.post('authorizations', this.loginForm)
+        //     local.setUser(data)
+        //     this.$router.push('/')
+        //   } catch (e) {
+        //     this.$message.error('手机号或验证码错误')
+        //   }
+        // }
       })
     }
-
   }
 }
 </script>
