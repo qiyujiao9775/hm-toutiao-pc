@@ -77,6 +77,8 @@
 
 <script>
 import local from '@/utils/store'
+import eventBus from '@/eventBus'
+
 export default {
   data () {
     return {
@@ -90,6 +92,14 @@ export default {
     const user = local.getUser() || {}// {}代表null
     this.userInfo.name = user.name
     this.userInfo.photo = user.photo
+    // 绑定事件 接收修改的那么数据
+    eventBus.$on('updateNmae', (name) => {
+      this.userInfo.name = name
+    })
+    // 绑定事件  接收修改的photo数据
+    eventBus.$on('updatePhoto', (photo) => {
+      this.userInfo.photo = photo
+    })
   },
 
   methods: {
