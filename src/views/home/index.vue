@@ -4,7 +4,7 @@
       <!-- logo -->
       <div class="logo" :class="{smallLogo:!isOpen}"></div>
       <el-menu
-        default-active="/"
+        :default-active="$route.path"
         background-color="#002033"
         text-color="#fff"
         active-text-color="#ffd04b"
@@ -108,7 +108,6 @@ export default {
     setting () {
       this.$router.push('/setting')
     },
-
     logout () {
       this.$router.push('/login')
     },

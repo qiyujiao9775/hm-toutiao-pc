@@ -80,8 +80,11 @@ export default {
         if (valid) {
           // 当一段代码不能保证一定没有报错
           //  try {} catch (e) {}     exeption()意外捕获异常处理异常
-          try { // 成功
-            const { data: { data } } = await this.$http.post('authorizations', this.loginForm)
+          try {
+            // 成功
+            const {
+              data: { data }
+            } = await this.$http.post('authorizations', this.loginForm)
             local.setUser(data)
             this.$router.push('/')
           } catch (e) {
@@ -107,7 +110,7 @@ export default {
   top: 0;
 }
 // 饿了么组件 el-card 组件名称  解析成HTML  后组件根元素上默认生成一个类和组件的名称一致
-.el-card {
+.container .el-card {
   width: 400px;
   height: 340px;
   position: absolute;
